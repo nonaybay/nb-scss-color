@@ -1,0 +1,171 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:math';
+@use '../variable' as *;
+
+
+//  Profiles:
+//    1 - sRGB
+//    2 - display-p3
+$profile: 1;
+$profile-list: list.nth($lum-list, $profile);
+
+
+@function linear-component($v) {
+  $v: math.div($v, 255);
+  $cond: ($v < 0.04045);
+  $true: math.div($v, 12.92);
+  $false: math.pow(math.div(($v + 0.055), 1.055), 2.4);
+
+  @return if($cond, $true, $false);
+}
+
+
+@function linear-color($color) {
+  $r: linear-component(color.red($color));
+  $g: linear-component(color.green($color));
+  $b: linear-component(color.blue($color));
+  $rgb: ($r, $g, $b);
+
+  @return $rgb;
+}
+
+
+@function luminance($color) {
+  $lum: 0;
+  $rgb: linear-color($color);
+
+  @for $i from 1 through list.length($rgb) {
+    $prof: list.nth($profile-list, $i);
+    $comp: list.nth($rgb, $i);
+    $comp-lum: (($prof * $comp));
+    $lum: $lum + $comp-lum;
+  }
+
+  @return $lum;
+}
+
+
+@function contrast-ratio($ca, $cb) {
+  $luma: luminance($ca);
+  $lumb: luminance($cb);
+  $lx: math.max($luma, $lumb) + 0.05;
+  $ln: math.min($luma, $lumb) + 0.05;
+
+  @return math.div($lx, $ln);
+}
+
+
+@function chan($v) {
+  $e: math.pow(10, 0);
+  @return math.div(math.round($v * $e), $e);
+}
+
+
+@function color-to-hsv($color) {
+  $h: math.div(color.hue($color), 1deg);
+  $s: math.div(color.saturation($color), 1%);
+  $l: math.div(color.lightness($color), 1%);
+
+  @if ($l < 50) {
+    $s: $s * math.div($l, 100);
+  } @else {
+    $s: $s * math.div((100 - $l), 100);
+  }
+
+  $v: ($l + $s);
+
+  @if ($v == 0) {
+    $s: 0;
+  } @else {
+    $s: (math.div((2 * $s), $v) * 100);
+  }
+
+  $hsv: ($h, $s, $v);
+
+  @return $hsv;
+}
+
+
+@function hsv-to-color($hsv) {
+  $h: list.nth($hsv, 1);
+  $s: list.nth($hsv, 2);
+  $v: list.nth($hsv, 3);
+
+  $s: math.div($s, 100);
+  $v: math.div($v, 100);
+
+  $l: (2 - $s) * $v;
+
+  $sl: ($s * $v);
+
+  @if ($sl != 0) {
+    @if ($l <= 1) {
+      $sl: math.div($sl, $l);
+    } @else {
+      $sl: math.div($sl, (2 - $l));
+    }
+  } @else {
+    $sl: 0;
+  }
+
+  $l: math.div($l, 2);
+
+  $sl: ($sl * 100);
+  $l: ($l * 100);
+  $s: $sl;
+
+  $s: math.max(math.min($s, 100), 0);
+
+  $color: color.change(black, $hue: $h, $saturation: $s * 1%, $lightness: $l * 1%);
+
+  @return $color;
+}
+
+
+@function scale($v, $w, $n, $x, $p: 100) {
+  $i: if(($w >= 0), ($x - $v), ($v - $n));
+  $s: math.div(($w * $i), $p);
+
+  @return ($v + $s);
+}
+
+
+@function modify-color($color, $hu, $sa, $li) {
+  $hsv: color-to-hsv($color);
+  $h: list.nth($hsv, 1);
+  $s: list.nth($hsv, 2);
+  $v: list.nth($hsv, 3);
+
+  $h: scale($h, $hu, 1, 360);
+  $s: scale($s, $sa, 0, 100);
+  $v: scale($v, $li, 0, 100);
+
+  $hsv: ($h, $s, $v);
+  $color: hsv-to-color($hsv);
+  @return $color;
+}
+
+
+$color: #3a3a3c;
+$color-0: modify-color($color, 0, -91, 100);
+$color-1: modify-color($color, 0, -63, 96);
+$color-2: modify-color($color, 0, -55, 87);
+$color-3: modify-color($color, 0, -27, 81);
+$color-4: modify-color($color, 0, -19, 50);
+$color-5: modify-color($color, 0, 0, 25);
+$color-6: modify-color($color, 0, 0, 0);
+$color-7: modify-color($color, 0, 0, -66);
+$color-8: modify-color($color, 0, 0, -100);
+
+:root {
+  color: $color-0;
+  color: $color-1;
+  color: $color-2;
+  color: $color-3;
+  color: $color-4;
+  color: $color-5;
+  color: $color-6;
+  color: $color-7;
+  color: $color-8;
+}

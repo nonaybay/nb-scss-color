@@ -1,0 +1,17 @@
+{
+  "name": "nb-scss-color",
+  "version": "0.0.1",
+  "description": "README.md",
+  "author": "nonaybay",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "scss",
+    "sass",
+    "tool",
+    "color"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nonaybay/nb-scss-color.git"
+  }
+}
