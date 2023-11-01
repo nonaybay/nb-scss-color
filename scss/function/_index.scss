@@ -145,27 +145,3 @@ $profile-list: list.nth($lum-list, $profile);
   $color: hsv-to-color($hsv);
   @return $color;
 }
-
-
-$color: #3a3a3c;
-$color-0: modify-color($color, 0, -91, 100);
-$color-1: modify-color($color, 0, -63, 96);
-$color-2: modify-color($color, 0, -55, 87);
-$color-3: modify-color($color, 0, -27, 81);
-$color-4: modify-color($color, 0, -19, 50);
-$color-5: modify-color($color, 0, 0, 25);
-$color-6: modify-color($color, 0, 0, 0);
-$color-7: modify-color($color, 0, 0, -66);
-$color-8: modify-color($color, 0, 0, -100);
-
-:root {
-  color: $color-0;
-  color: $color-1;
-  color: $color-2;
-  color: $color-3;
-  color: $color-4;
-  color: $color-5;
-  color: $color-6;
-  color: $color-7;
-  color: $color-8;
-}
