@@ -1,14 +1,20 @@
 {
   "name": "nb-scss-color",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "README.md",
   "author": "nonaybay",
   "license": "GPL-3.0-or-later",
   "keywords": [
-    "scss",
-    "sass",
-    "tool",
-    "color"
+    "SCSS",
+    "CSS",
+    "Frontend",
+    "Web development",
+    "Color utilities",
+    "UI design",
+    "Styling",
+    "CSS preprocessor",
+    "Web design",
+    "Development tools"
   ],
   "repository": {
     "type": "git",
